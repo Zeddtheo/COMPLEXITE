@@ -1,8 +1,11 @@
+import src.Graphic.export;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -14,15 +17,26 @@ public class Main {
     static List<Integer> Affections;
 
     public static void main(String[] args) throws IOException {
-        ReadDataFile("Clauses.txt");
-        ReadAffectionFile("Affections.txt");
-        System.out.println(clauses);
-        System.out.println(Affections);
-        if(SAT(clauses,Affections))
-            System.out.println("satisfaisable");
-        else
-            System.out.println("Non satisfaisable");
+        List<int[]> list = new ArrayList<>();
+        for (int i = 20; i < 100; i+=10) {
+            export.writeRandomClauses(i, 10, i, "Clauses.txt");
+            export.writeRandomAffectations(i, "Affections.txt");
 
+            long startTime = System.currentTimeMillis();
+
+            ReadDataFile("Clauses.txt");
+            ReadAffectionFile("Affections.txt");
+//            System.out.println(clauses);
+//            System.out.println(Affections);
+            if(SAT(clauses,Affections))
+                System.out.println("satisfaisable");
+            else
+                System.out.println("Non satisfaisable");
+            long endTime = System.currentTimeMillis();
+
+            list.add(new int[]{i, (int)(endTime - startTime)});
+            export.toCSV(list, "for_graphic.csv");
+        }
     }
     public static void ReadDataFile(String FileName) throws IOException {
          clauses=Files.lines(Paths.get(FileName))

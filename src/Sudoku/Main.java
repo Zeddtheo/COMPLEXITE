@@ -16,7 +16,7 @@ public class Main {
                 {1, 2, 3, 4, 0, 6, 7, 8, 9},
                 {1, 2, 3, 0, 5, 6, 7, 8, 9},
                 {1, 2, 3, 4, 5, 6, 7, 8, 9}};
-        toCSV(arr);
+        toCSV(arr, "makeGraphic.csv");
         new Sudoku().printSudoku(arr);
     }
 
