@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Réductions complexite.iml" filepath="$PROJECT_DIR$/.idea/Réductions complexite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TP2-SuDoKu.iml" filepath="$PROJECT_DIR$/TP2-SuDoKu.iml" />
     </modules>
   </component>
 </project>
