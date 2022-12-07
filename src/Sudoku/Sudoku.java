@@ -11,6 +11,9 @@ public class Sudoku {
     //Pour enregistrer toutes les clauses.
     static List<ArrayList<Integer>> arrCls = new ArrayList<>();
 
+    /**
+     * Lire le fichier de Sudoku
+     */
     public static int[][] readSudoku(String fileName) throws FileNotFoundException {
         File f = new File(fileName);
         Scanner scanner = new Scanner(f);
@@ -25,6 +28,9 @@ public class Sudoku {
         return arrSud;
     }
 
+    /**
+     * Calculer la valeur dans la cellule (r, v)
+     */
     public static int encode(int r, int c, int v) {
         return (r - 1) * N * N + (c - 1) * N + v;
     }
@@ -46,6 +52,9 @@ public class Sudoku {
         }
     }
 
+    /**
+     * Transformer un Sudoku de n*n à forme de clause.
+     */
     public static void transferToClause(int[][] arr) throws IOException {
         /***
          * 1. Assurer qu'il y a au moins un chiffre dans chaque cellule.
@@ -152,6 +161,10 @@ public class Sudoku {
             }
         }
     }
+
+    /**
+     * Créer le fichier sous forme de DIMACS CNF
+     */
     public static void buildCNF(List<ArrayList<Integer>> list) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter("src/Sudoku/Result/SudokuCNF.txt"));
         bw.write("p cnf "+ N*N*N+" "+arrCls.size());
@@ -176,7 +189,9 @@ public class Sudoku {
                 {1, 2, 3, 4, 0, 6, 7, 8, 9},
                 {1, 2, 3, 0, 5, 6, 7, 8, 9},
                 {1, 2, 3, 4, 5, 6, 7, 8, 9}};
-        printSudoku(arr);
+        //printSudoku(arr);
+
+
         int[][] arr2 = readSudoku("src/Sudoku/Test/sudoku01.txt");
         printSudoku(arr2);
         long startTime = System.currentTimeMillis();
