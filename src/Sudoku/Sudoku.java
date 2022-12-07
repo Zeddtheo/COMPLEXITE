@@ -177,7 +177,7 @@ public class Sudoku {
                 {1, 2, 3, 0, 5, 6, 7, 8, 9},
                 {1, 2, 3, 4, 5, 6, 7, 8, 9}};
         printSudoku(arr);
-        int[][] arr2 = readSudoku("src/Sudoku/Test/sudoku03.txt");
+        int[][] arr2 = readSudoku("src/Sudoku/Test/sudoku02.txt");
         printSudoku(arr2);
         long startTime = System.currentTimeMillis();
         transferToClause(arr2);
