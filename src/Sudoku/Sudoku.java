@@ -31,18 +31,18 @@ public class Sudoku {
 
     public static void printSudoku(int arr[][]) {
         int i, j;
-        System.out.println("-------------------------");
+        System.out.println("--------------------------------------------------");
         for (i = 0; i < N; i++) {
             for (j = 0; j < N; j++) {
-                if (j % 3 == 0) System.out.print("| ");
+                if (j % M == 0) System.out.print("|\t");
                 if (arr[i][j] != 0)
-                    System.out.print(arr[i][j] + " ");
+                    System.out.print(arr[i][j] + "\t");
                 else
-                    System.out.print("_ ");
-                if (j == 8)
+                    System.out.print("_\t");
+                if (j == N-1)
                     System.out.print("|\n");
             }
-            if ((i + 1) % 3 == 0) System.out.println("-------------------------");
+            if ((i + 1) % M == 0) System.out.println("--------------------------------------------------");
         }
     }
 
@@ -153,7 +153,7 @@ public class Sudoku {
         }
     }
     public static void buildCNF(List<ArrayList<Integer>> list) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter("src/Sudoku/SudokuToSat.txt"));
+        BufferedWriter bw = new BufferedWriter(new FileWriter("src/Sudoku/Result/SudokuCNF.txt"));
         bw.write("p cnf "+ N*N*N+" "+arrCls.size());
         StringBuilder constraints = new StringBuilder();
         bw.newLine();
@@ -177,10 +177,12 @@ public class Sudoku {
                 {1, 2, 3, 0, 5, 6, 7, 8, 9},
                 {1, 2, 3, 4, 5, 6, 7, 8, 9}};
         printSudoku(arr);
-        int[][] arr2 = readSudoku("src/Sudoku/sudoku.txt");
+        int[][] arr2 = readSudoku("src/Sudoku/Test/sudoku03.txt");
         printSudoku(arr2);
+        long startTime = System.currentTimeMillis();
         transferToClause(arr2);
+        long endTime = System.currentTimeMillis();
         buildCNF(arrCls);
-        //System.out.println(arrCls);
+        System.out.println("Temps de l'exécution: " + (endTime-startTime)+" ns");
     }
 }
