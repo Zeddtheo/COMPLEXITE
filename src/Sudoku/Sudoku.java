@@ -2,18 +2,14 @@ package src.Sudoku;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Sudoku {
     public static int M;
     public static int N;
-
-    public Sudoku() throws IOException {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-            }
-        }
-    }
+    //Pour enregistrer toutes les clauses.
+    static List<ArrayList<Integer>> arrCls = new ArrayList<>();
 
     public static int[][] readSudoku(String fileName) throws FileNotFoundException {
         File f = new File(fileName);
@@ -48,26 +44,19 @@ public class Sudoku {
             }
             if ((i + 1) % 3 == 0) System.out.println("-------------------------");
         }
-        System.out.println("-------------------------");
     }
 
-    public static void createSudoku() {
-    }
-
-
-    public static void transferToClause() throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter("SudokuToSat.txt"));
-        ArrayList<Integer> cls = new ArrayList<Integer>();
+    public static void transferToClause(int[][] arr) throws IOException {
         /***
          * 1. Assurer qu'il y a au moins un chiffre dans chaque cellule.
          */
         for (int i = 1; i < N + 1; i++) {
             for (int j = 1; j < N + 1; j++) {
+                ArrayList<Integer> cls = new ArrayList<Integer>();
                 for (int k = 1; k < N + 1; k++) {
                     cls.add(encode(i, j, k));
-                    bw.write(encode(i, j, k));
                 }
-                bw.write("0\n");
+                arrCls.add(cls);
             }
         }
         /**
@@ -77,11 +66,10 @@ public class Sudoku {
             for (int j = 1; j < N + 1; j++) {
                 for (int k = 1; k < N + 1; k++) {
                     for (int m = k + 1; m < N + 1; m++) {
+                        ArrayList<Integer> cls = new ArrayList<Integer>();
                         cls.add(-encode(i, j, k));
                         cls.add(-encode(i, j, m));
-                        bw.write(-encode(i, j, k));
-                        bw.write(-encode(i, j, m));
-                        bw.write("0\n");
+                        arrCls.add(cls);
                     }
                 }
             }
@@ -94,11 +82,10 @@ public class Sudoku {
             for (int j = 1; j < N + 1; j++) {
                 for (int k = 1; k < N + 1; k++) {
                     for (int n = j + 1; n < N + 1; n++) {
+                        ArrayList<Integer> cls = new ArrayList<Integer>();
                         cls.add(-encode(i, j, k));
                         cls.add(-encode(i, n, k));
-                        bw.write(-encode(i, j, k));
-                        bw.write(-encode(i, n, k));
-                        bw.write("0\n");
+                        arrCls.add(cls);
                     }
                 }
             }
@@ -110,11 +97,10 @@ public class Sudoku {
             for (int j = 1; j < N + 1; j++) {
                 for (int k = 1; k < N + 1; k++) {
                     for (int l = i + 1; l < N + 1; l++) {
+                        ArrayList<Integer> cls = new ArrayList<Integer>();
                         cls.add(-encode(i, j, k));
                         cls.add(-encode(l, j, k));
-                        bw.write(-encode(i, j, k));
-                        bw.write(-encode(l, j, k));
-                        bw.write("0\n");
+                        arrCls.add(cls);
                     }
                 }
             }
@@ -128,11 +114,10 @@ public class Sudoku {
                     for (int x = 1; x < M + 1; x++) {
                         for (int y = 1; y < M + 1; y++) {
                             for (int k = y + 1; k < M + 1; k++) {
+                                ArrayList<Integer> cls = new ArrayList<Integer>();
                                 cls.add(-encode(M * i + x, M * j + y, z));
                                 cls.add(-encode(M * i + x, M * j + k, z));
-                                bw.write(-encode(M * i + x, M * j + y, z));
-                                bw.write(-encode(M * i + x, M * j + y, z));
-                                bw.write("0\n");
+                                arrCls.add(cls);
                             }
                         }
                     }
@@ -146,11 +131,10 @@ public class Sudoku {
                         for (int y = 1; y < M + 1; y++) {
                             for (int k = x + 1; k < M + 1; k++) {
                                 for (int l = 1; l < M + 1; l++) {
+                                    ArrayList<Integer> cls = new ArrayList<Integer>();
                                     cls.add(-encode(M * i + x, M * j + y, z));
                                     cls.add(-encode(M * i + k, M * j + l, z));
-                                    bw.write(-encode(M * i + x, M * j + y, z));
-                                    bw.write(-encode(M * i + k, M * j + l, z));
-                                    bw.write("0\n");
+                                    arrCls.add(cls);
                                 }
                             }
                         }
@@ -158,18 +142,30 @@ public class Sudoku {
                 }
             }
         }
+        for (int i = 1; i < N + 1; i++) {
+            for (int j = 1; j < N + 1; j++) {
+                if (arr[i - 1][j - 1] != 0) {
+                    ArrayList<Integer> cls = new ArrayList<Integer>();
+                    cls.add(encode(i, j, arr[i - 1][j - 1]));
+                    arrCls.add(cls);
+                }
+            }
+        }
+    }
+    public static void buildCNF(List<ArrayList<Integer>> list) throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter("src/Sudoku/SudokuToSat.txt"));
+        bw.write("p cnf "+ N*N*N+" "+arrCls.size());
+        StringBuilder constraints = new StringBuilder();
+        bw.newLine();
+        for(List<Integer> element:list){
+            for (int val: element) {
+                constraints.append(val).append(" ");
+            }
+            constraints.append("0\n");
+        }
+        bw.write(constraints.toString());
         bw.close();
     }
-
-    //    public boolean isSolved() {
-//        for (int i = 0; i < N; i++) {
-//            for (int j = 0; j < N; j++) {
-//                if (s[i][j] == 0)
-//                    return false;
-//            }
-//        }
-//        return true;
-//    }
     public static void main(String[] args) throws IOException {
         int arr[][] = {{1, 2, 3, 4, 5, 6, 7, 8, 9},
                 {1, 2, 3, 4, 5, 6, 7, 8, 9},
@@ -180,9 +176,11 @@ public class Sudoku {
                 {1, 2, 3, 4, 0, 6, 7, 8, 9},
                 {1, 2, 3, 0, 5, 6, 7, 8, 9},
                 {1, 2, 3, 4, 5, 6, 7, 8, 9}};
-        //new Sudoku().printSudoku(arr);
+        printSudoku(arr);
         int[][] arr2 = readSudoku("src/Sudoku/sudoku.txt");
         printSudoku(arr2);
-        transferToClause();
+        transferToClause(arr2);
+        buildCNF(arrCls);
+        //System.out.println(arrCls);
     }
 }
