@@ -4,9 +4,12 @@ import java.io.*;
 
 public class StableToSat {
 
+    private int nbVariables;
+    private int nbClauses;
     private int[][] graph ;
     private int[][] complementaryGraph ;
     private final int size ;
+
 
     public int[][] getGraph() {
         return graph;
@@ -29,15 +32,19 @@ public class StableToSat {
 
     public StableToSat(){
         this.size = 3 ;
+        this.nbClauses = 0;
+        this.nbVariables = 0;
+
         this.graph = new int[][]{
                 {0, 1, 1},
                 {1, 0, 0},
                 {1, 0, 0}
         };
-        this.complementaryGraph = new int[size][] ;
+        this.complementaryGraph = new int[size][size] ;
         for(int i = 0 ; i < size ; i++){
             for(int j = 0 ; j < size ; j++){
-                this.complementaryGraph[i][j] = this.graph[i][j] == 0 ? 1 : 0 ;
+                 if(this.graph[i][j] == 0)this.complementaryGraph[i][j] =  1 ;
+                 else this.complementaryGraph[i][j] = 0 ;
             }
         }
     }
@@ -45,7 +52,10 @@ public class StableToSat {
     public StableToSat(int[][] gr , int s) {
         this.size = s;
         this.graph = gr;
-        this.complementaryGraph = new int[size][] ;
+        this.nbClauses = 0;
+        this.nbVariables = 0;
+
+        this.complementaryGraph = new int[size][size] ;
         for(int i = 0 ; i < size ; i++){
             for(int j = 0 ; j < size ; j++){
                 this.complementaryGraph[i][j] = this.graph[i][j] == 0 ? 1 : 0 ;
@@ -65,8 +75,10 @@ public class StableToSat {
         }
     }
 
-    public static void writeToFile(String path, String content) {
+
+    public void writeToFile(String path) {
         try {
+            String content = "p cnf " + this.nbVariables + " " + this.nbClauses + "\n";
             BufferedWriter writer = new BufferedWriter(new FileWriter(path, true));
             writer.append(content) ;
             writer.close() ;
@@ -76,9 +88,9 @@ public class StableToSat {
     }
 
 
+
     public static void main(String[] args){
-        writeToFile("src/stable/test", "ceci est un test\n" +
-                "allons voir si on retourne à la ligne") ;
-        System.out.println("on a lancé le truc") ;
+        StableToSat s = new StableToSat() ;
+        s.writeToFile("src/stable/test_cnf") ;
     }
 }
