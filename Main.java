@@ -14,8 +14,8 @@ public class Main {
     static List<Integer> Affections;
 
     public static void main(String[] args) throws IOException {
-        ReadDataFile("C:/Users/Admin/Desktop/Aix_Marseille1/TP_Complexite/src/Clauses.txt");
-        ReadAffectionFile("C:/Users/Admin/Desktop/Aix_Marseille1/TP_Complexite/src/Affections.txt");
+        ReadDataFile("Clauses.txt");
+        ReadAffectionFile("Affections.txt");
         System.out.println(clauses);
         System.out.println(Affections);
         if(SAT(clauses,Affections))
