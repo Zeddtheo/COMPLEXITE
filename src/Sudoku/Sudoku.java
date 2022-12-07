@@ -5,19 +5,31 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Sudoku {
-    public static final int M = 3;
-    public static final int N = M * M;
-    int[][] s = new int[N][N];
+    public static int M;
+    public static int N;
 
     public Sudoku() throws IOException {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s[i][j] = 0;
             }
         }
     }
 
-    int encode(int r, int c, int v) {
+    public static int[][] readSudoku(String fileName) throws FileNotFoundException {
+        File f = new File(fileName);
+        Scanner scanner = new Scanner(f);
+        M = scanner.nextInt();
+        N = M * M;
+        int[][] arrSud = new int[N][N];
+        for (int i = 0; i < arrSud.length; i++) {
+            for (int j = 0; j < arrSud.length; j++) {
+                arrSud[i][j] = scanner.nextInt();
+            }
+        }
+        return arrSud;
+    }
+
+    public static int encode(int r, int c, int v) {
         return (r - 1) * N * N + (c - 1) * N + v;
     }
 
@@ -42,15 +54,9 @@ public class Sudoku {
     public static void createSudoku() {
     }
 
-    public static void readSudoku(String fileName) throws FileNotFoundException {
-        File f = new File(fileName);
-        Scanner scanner = new Scanner(f);
 
-    }
-
-    public void transferToClause() throws IOException
-    {
-        BufferedWriter bw = new BufferedWriter(new FileWriter("Sudoku.txt"));
+    public static void transferToClause() throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter("SudokuToSat.txt"));
         ArrayList<Integer> cls = new ArrayList<Integer>();
         /***
          * 1. Assurer qu'il y a au moins un chiffre dans chaque cellule.
@@ -155,13 +161,28 @@ public class Sudoku {
         bw.close();
     }
 
-    public boolean isSolved() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (s[i][j] == 0)
-                    return false;
-            }
-        }
-        return true;
+    //    public boolean isSolved() {
+//        for (int i = 0; i < N; i++) {
+//            for (int j = 0; j < N; j++) {
+//                if (s[i][j] == 0)
+//                    return false;
+//            }
+//        }
+//        return true;
+//    }
+    public static void main(String[] args) throws IOException {
+        int arr[][] = {{1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 0, 7, 8, 9},
+                {1, 2, 3, 4, 0, 6, 7, 8, 9},
+                {1, 2, 3, 0, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9}};
+        //new Sudoku().printSudoku(arr);
+        int[][] arr2 = readSudoku("src/Sudoku/sudoku.txt");
+        printSudoku(arr2);
+        transferToClause();
     }
 }
